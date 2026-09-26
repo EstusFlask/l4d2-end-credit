@@ -5,10 +5,23 @@
 - `自选-换图类(投票换图)(v1.1)(fdxx, sorallll, HatsuneImagine)`
 - `自选-换图类(自动换图)(v1.0.5)(Alex Dragokas, fdxx, sorallll)`
 
-作用是把自动换图插件已有的
+作用是把自动换图插件已有的cfg/sourcemod/map_changer.cfg
 `mapchanger_finale_change_type` 固定为 `8`，让服务器在 End Credits/统计字幕播放完毕后，
-再加载投票选中或自动配置的下一张地图。同时，它会在统计字幕结束阶段继续拦截
-`map_changer v1.0.5` 遗漏的重复 `DisconnectToLobby` 消息，避免部分玩家被送回大厅。
+再加载投票选中或自动配置的下一张地图。并且修复了疑似由于map_changer导致的DisconnectToLobby错误
+```sourcepawn
+Action umDisconnectToLobby(...)
+{
+    UnhookUserMessage(g_umDisconnectToLobby, umDisconnectToLobby, true);
+    g_bUMHooked = false;
+
+    if (g_iFinaleChangeType & FINALE_CHANGE_CREDITS_END)
+    {
+        FinaleMapChange();
+        return Plugin_Handled;
+    }
+}
+```
+它在处理第一条消息时就执行 UnhookUserMessage()，导致后续重复消息漏过去。
 
 ## 安装
 
@@ -31,11 +44,10 @@ sm plugins load l4d2_keep_end_credits
 
 ```text
 sm plugins list
-sm_cvar mapchanger_finale_change_type
+mapchanger_finale_change_type
 ```
 
-插件列表中必须能看到 `[L4D2] Keep End Credits`，后一个命令应显示值为 `8`。
-终局救援成功后会先播放统计字幕；字幕播放完，
+后一个命令应显示值为 `8`。终局救援成功后会先播放统计字幕；字幕播放完，
 或者玩家按空格完成跳过流程后，原 `map_changer` 插件再切换地图。
 
 ## 兼容性说明
@@ -44,9 +56,6 @@ sm_cvar mapchanger_finale_change_type
 - 自动换图插件原有的顺序、随机模式、自定义 `map_changer.cfg` 和失败次数设置均保持不变。
 - 如果没有加载 `map_changer.smx`，本补丁不会做任何事；原版游戏流程也不会受影响。
 - 本补丁启用期间，手动把 `mapchanger_finale_change_type` 改成其他值会被自动改回 `8`。
-- 客户端控制台出现 `BinkOpen(...l4d2_background04.bik)` 通常表示已经返回主菜单；1.1.0
-  及之后版本会兜底拦截导致该现象的重复大厅断开消息。
-- 发布包内的 `.smx` 使用 SourceMod 1.11.0.6968 编译，可直接用于该版本及兼容的新版本。
 
 ## 源码编译
 
