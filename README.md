@@ -5,7 +5,7 @@
 - `自选-换图类(投票换图)(v1.1)(fdxx, sorallll, HatsuneImagine)`
 - `自选-换图类(自动换图)(v1.0.5)(Alex Dragokas, fdxx, sorallll)`
 
-它不接管投票、不选择地图，也不执行换图。它只把自动换图插件已有的
+作用是把自动换图插件已有的
 `mapchanger_finale_change_type` 固定为 `8`，让服务器在 End Credits/统计字幕播放完毕后，
 再加载投票选中或自动配置的下一张地图。
 
@@ -23,7 +23,6 @@ left4dead2/addons/sourcemod/plugins/l4d2_keep_end_credits.smx
 sm plugins load l4d2_keep_end_credits
 ```
 
-不需要额外扩展、gamedata、翻译文件或配置文件。
 
 ## 验证
 
