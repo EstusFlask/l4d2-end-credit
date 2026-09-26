@@ -5,28 +5,10 @@
 - `自选-换图类(投票换图)(v1.1)(fdxx, sorallll, HatsuneImagine)`
 - `自选-换图类(自动换图)(v1.0.5)(Alex Dragokas, fdxx, sorallll)`
 
-作用是把自动换图插件已有的cfg/sourcemod/map_changer.cfg
+作用是把自动换图插件已有的
 `mapchanger_finale_change_type` 固定为 `8`，让服务器在 End Credits/统计字幕播放完毕后，
-<<<<<<< HEAD
 再加载投票选中或自动配置的下一张地图。同时，它会在统计字幕结束阶段继续拦截
 `map_changer v1.0.5` 遗漏的重复 `DisconnectToLobby` 消息，避免部分玩家被送回大厅。
-=======
-再加载投票选中或自动配置的下一张地图。并且修复了疑似由于map_changer导致的DisconnectToLobby错误
-```sourcepawn
-Action umDisconnectToLobby(...)
-{
-    UnhookUserMessage(g_umDisconnectToLobby, umDisconnectToLobby, true);
-    g_bUMHooked = false;
-
-    if (g_iFinaleChangeType & FINALE_CHANGE_CREDITS_END)
-    {
-        FinaleMapChange();
-        return Plugin_Handled;
-    }
-}
-```
-它在处理第一条消息时就执行 UnhookUserMessage()，导致后续重复消息漏过去。
->>>>>>> 4714b24b089b54ddb09d7779c89863ae4c0db2e2
 
 ## 安装
 
